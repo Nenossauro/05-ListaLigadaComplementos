@@ -8,6 +8,7 @@ struct NO {
 };
 
 NO* primeiro = NULL;
+NO* ultimo = NULL;
 
 // headers
 void menu();
@@ -69,7 +70,7 @@ void menu()
 
 void inicializar()
 {
-	// se a lista j� possuir elementos
+	// se a lista já possuir elementos
 // libera a memoria ocupada
 	NO* aux = primeiro;
 	while (aux != NULL) {
@@ -113,7 +114,7 @@ void exibirElementos()
 
 void inserirElemento()
 {
-	// aloca memoria dinamicamente para o novo elemento
+	// aloca memoria para os elementos
 	NO* novo = (NO*)malloc(sizeof(NO));
 	if (novo == NULL)
 	{
@@ -124,18 +125,33 @@ void inserirElemento()
 	cin >> novo->valor;
 	novo->prox = NULL;
 
-	if (primeiro == NULL)
+	NO* aux = primeiro;
+	while (aux != NULL) {
+		if (aux->valor == novo->valor) {
+			free(novo);
+			cout << "Valor ja inserido. Digite outro.\n";
+			return; 
+		}
+		aux = aux->prox;
+	}
+
+	if (primeiro == NULL || primeiro->valor >= novo->valor)
 	{
 		primeiro = novo;
+		ultimo = novo;
 	}
 	else
 	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
+		NO* anterior = primeiro;
+		while (anterior->prox != NULL && anterior->prox->valor < novo->valor)
+		{
+			anterior = anterior->prox;
 		}
-		aux->prox = novo;
+		novo->prox = anterior->prox;
+		anterior->prox = novo;
+		if (novo->prox == NULL) {
+			ultimo = novo; 
+		}
 	}
 }
 
@@ -146,7 +162,19 @@ void excluirElemento()
 
 void buscarElemento()
 {
-
+	int achar;
+    cout << "Digite o valor a ser buscado: ";
+    cin >> achar;
+	NO* aux = primeiro;
+	while (aux != NULL) 
+	{
+		if (aux->valor == achar)
+		{
+			cout << "Valor "<<achar<<" encontrado!\n"; 
+			break;
+		}
+		aux = aux->prox;
+	}
+	cout << "Valor "<<achar<<" não encontrado!\n";  
+	
 }
-
-
